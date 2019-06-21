@@ -5,11 +5,14 @@ define a new top-level command for clickhook and a hook command
 import logging
 import click
 
+logger = logging.getLogger(__name__)
+
 
 @click.command()
-def show():
+@click.pass_context
+def show(ctx):
     """Show command from plugin"""
-    logging.info('calling show from plugin')
+    logger.info('calling show from plugin')
     click.echo('showing off')
 
 
@@ -18,7 +21,9 @@ is returned can be used.
 '''
 
 
-def hooked():
+def hooked(ctx):
     """Function to call during the run hook"""
-    logging.info('calling plugin.hooked')
-    click.echo("I'm hooked")
+    logger.info('calling plugin.hooked')
+    click.echo(f"I'm hooked to ctx {ctx}")
+    click.echo(f"ctx.parent: {ctx.parent}")
+    click.echo(f"current library: {ctx.obj['lib']}")
